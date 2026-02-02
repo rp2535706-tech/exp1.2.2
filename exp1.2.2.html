@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Product Filter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    select {
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .price {
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .category {
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Dynamic Product Filter</h2>
+
+  <div class="controls">
+    <label>Sort By: </label>
+    <select id="sortSelect">
+      <option value="default">Default</option>
+      <option value="low-high">Price: Low to High</option>
+      <option value="high-low">Price: High to Low</option>
+      <option value="name">Name (A–Z)</option>
+    </select>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+
+  <script>
+    const products = [
+      { id: 1, name: "Shoes", price: 1200, category: "Fashion" },
+      { id: 2, name: "Watch", price: 2500, category: "Fashion" },
+      { id: 3, name: "Phone", price: 15000, category: "Electronics" },
+      { id: 4, name: "Laptop", price: 55000, category: "Electronics" },
+      { id: 5, name: "Headphones", price: 2000, category: "Electronics" },
+      { id: 6, name: "T-Shirt", price: 800, category: "Fashion" }
+    ];
+
+    const grid = document.getElementById("productGrid");
+    const sortSelect = document.getElementById("sortSelect");
+
+    function displayProducts(list) {
+      grid.innerHTML = "";
+      list.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <h4>${product.name}</h4>
+          <div class="category">${product.category}</div>
+          <div class="price">₹${product.price}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    sortSelect.addEventListener("change", () => {
+      let sorted = [...products];
+      const value = sortSelect.value;
+
+      if (value === "low-high") sorted.sort((a, b) => a.price - b.price);
+      else if (value === "high-low") sorted.sort((a, b) => b.price - a.price);
+      else if (value === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
+
+      displayProducts(sorted);
+    });
+
+    // Initial display
+    displayProducts(products);
+  </script>
+
+</body>
+</html>
